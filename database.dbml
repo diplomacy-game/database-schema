@@ -5,6 +5,7 @@ Project Diplomacy {
 
 Table user {
     id int [pk, increment]
+    name varchar [unique]
     email varchar [unique]
     created_at timestamp
     password varchar
@@ -14,7 +15,7 @@ Table user {
 
 Table game {
     id int [pk,increment]
-    name: varchar
+    name varchar
     created_at timestamp
     map int [ref: > map.id]
     round int
