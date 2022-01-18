@@ -3,43 +3,122 @@ Project Diplomacy {
     note: ""
 }
 
-Table user {
+Table users {
     id int [pk, increment]
-    name varchar [unique]
-    email varchar [unique]
-    created_at timestamp
-    password varchar
+    name varchar [not null, unique]
+    email varchar [not null, unique]
+    created_at timestamp [not null, default: `now()`]
+    password varchar 
     salt varchar
-    note:""
+    elo int
+    note:"Users of the Diplomacy platform"
 }
 
-Table game {
+Table games {
     id int [pk,increment]
-    name varchar
-    created_at timestamp
-    map int [ref: > map.id]
-    round int
-    note:""
+    name varchar [not null]
+    created_at timestamp [not null, default: `now()`]
+    map int [not null, ref: > map.id]
+    turn int [not null, default: 1]
+    finished boolean
+    note:"Game run on the Diplomacy platform"
 }
 
 Table player {
     id int [pk,increment]
-    user_id int [ref: > user.id]
-    game_id int [ref: > user.id]
+    user_id int [ref: > users.id]
+    game_id int [ref: > users.id]
     country_id int [ref: > country.id]
+    victor boolean [default: false]
+    ready boolean [default: false, note:"Indicates that the player is ready to move on to the next turn"]
+    note: "User in a game"
 }
 
-Table gamestate {
+Table gamestates {
     id int [pk,increment]
-    game_id int [ref: > game.id]
+    game_id int [ref: > games.id]
+    turn int [not null]
+    note: "State of the game in a specific round"
 }
 
-Table map {
+Table units {
     id int [pk,increment]
+    gamestate_id int [ref: > gamestates_id]
+    type unit_types
+    province_id int [ref: > provinces.id]
+    country_id int [ref: > country.id]
+    note: "Unit placement during a specific gamestate"
 }
 
-Table country {
+Enum unit_types {
+    army,
+    fleet
+}
+
+Table order {
+    id int [pk,increment]
+    unit_id int [ref: > units.id]
+    type order_types [default: 'hold']
+    to province_id
+    from province_id
+    note: "Order given to an unit"
+}
+
+Enum order_types {
+    hold,
+    move,
+    support_move,
+    support_hold,
+    convoy
+}
+
+Table maps {
+    id int [pk,increment]
+    name varchar [not null]
+    description varchar [not null]
+    start_year int [not null]
+    created_by varchar [not null]
+    victory_supply_centers int
+}
+
+Table countries {
     id int [pk,increment]
     map_id int [ref: > map.id]
-    identifier varchar
+    name varchar [not null]
+    color varchar
+    importance int
+}
+
+Table provinces {
+    id int [pk,increment]
+    name varchar [not null]
+    identifier varchar [not null]
+    type province_type [not null]
+    map_id int [ref: > maps.id]
+    starting_occupation int [ref: > countries.id]
+    supply_center boolean
+    order int [note:"counts upwards from 0 for each province per map"]
+
+    indexes {
+        (map_id,order) [unique]
+    }
+}
+
+Enum province_type {
+    land,
+    sea,
+    coast
+}
+
+Table province_adjacency {
+    id int [pk,increment]
+    map_id int [ref: > maps.id]
+    province_a int [ref: > provinces.id]
+    province_b int [ref: > provinces.id]
+
+    indexes {
+        (province_a,province_b) [unique]
+    }
+
+    note:"province_a must always be smaller than province_b"
 }
