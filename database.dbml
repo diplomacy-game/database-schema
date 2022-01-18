@@ -1,0 +1,44 @@
+Project Diplomacy {
+    database_type: 'PostgreSQL'
+    note: ""
+}
+
+Table user {
+    id int [pk, increment]
+    email varchar [unique]
+    created_at timestamp
+    password varchar
+    salt varchar
+    note:""
+}
+
+Table game {
+    id int [pk,increment]
+    name: varchar
+    created_at timestamp
+    map int [ref: > map.id]
+    round int
+    note:""
+}
+
+Table player {
+    id int [pk,increment]
+    user_id int [ref: > user.id]
+    game_id int [ref: > user.id]
+    country_id int [ref: > country_id]
+}
+
+Table gamestate {
+    id int [pk,increment]
+    game_id int [ref: > game.id]
+}
+
+Table map {
+    id int [pk,increment]
+}
+
+Table country {
+    id int [pk,increment]
+    map_id int [ref: > map.id]
+    identifier varchar
+}
