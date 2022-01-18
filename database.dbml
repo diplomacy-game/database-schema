@@ -26,7 +26,7 @@ Table player {
     id int [pk,increment]
     user_id int [ref: > user.id]
     game_id int [ref: > user.id]
-    country_id int [ref: > country_id]
+    country_id int [ref: > country.id]
 }
 
 Table gamestate {
