@@ -18,7 +18,7 @@ Table games {
     id int [pk,increment]
     name varchar [not null]
     created_at timestamp [not null, default: `now()`]
-    map int [not null, ref: > map.id]
+    map int [not null, ref: > maps.id]
     turn int [not null, default: 1]
     finished boolean
     note:"Game run on the Diplomacy platform"
@@ -28,7 +28,7 @@ Table player {
     id int [pk,increment]
     user_id int [ref: > users.id]
     game_id int [ref: > users.id]
-    country_id int [ref: > country.id]
+    country_id int [ref: > countries.id]
     victor boolean [default: false]
     ready boolean [default: false, note:"Indicates that the player is ready to move on to the next turn"]
     note: "User in a game"
@@ -46,12 +46,12 @@ Table units {
     gamestate_id int [ref: > gamestates.id]
     type unit_types
     province_id int [ref: > provinces.id]
-    country_id int [ref: > country.id]
+    country_id int [ref: > countries.id]
     note: "Unit placement during a specific gamestate"
 }
 
 Enum unit_types {
-    army,
+    army
     fleet
 }
 
@@ -65,10 +65,10 @@ Table order {
 }
 
 Enum order_types {
-    hold,
-    move,
-    support_move,
-    support_hold,
+    hold
+    move
+    support_move
+    support_hold
     convoy
 }
 
@@ -83,7 +83,7 @@ Table maps {
 
 Table countries {
     id int [pk,increment]
-    map_id int [ref: > map.id]
+    map_id int [ref: > maps.id]
     name varchar [not null]
     color varchar
     importance int
@@ -105,8 +105,8 @@ Table provinces {
 }
 
 Enum province_type {
-    land,
-    sea,
+    land
+    sea
     coast
 }
 
