@@ -43,7 +43,7 @@ Table gamestates {
 
 Table units {
     id int [pk,increment]
-    gamestate_id int [ref: > gamestates_id]
+    gamestate_id int [ref: > gamestates.id]
     type unit_types
     province_id int [ref: > provinces.id]
     country_id int [ref: > country.id]
