@@ -125,8 +125,8 @@ Table province_adjacency {
 }
 
 Enum order_state{
-    successful,
-    invalid,
-    failed,
+    successful
+    invalid
+    failed
     unresolved
 }
