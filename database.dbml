@@ -61,6 +61,7 @@ Table order {
     type order_types [default: 'hold']
     to province_id
     from province_id
+    state order_state [default:'unresolved']
     note: "Order given to an unit"
 }
 
@@ -121,4 +122,11 @@ Table province_adjacency {
     }
 
     note:"province_a must always be smaller than province_b"
+}
+
+Enum order_state{
+    successful,
+    invalid,
+    failed,
+    unresolved
 }
